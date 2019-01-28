@@ -37,7 +37,7 @@ e_inv = 1/s(10, Inf); %setup summation identity for part b
 y = [];
 y2 = [];
 
-for i = 1:0.5:60
+for i = 1:1:60
     y(i) = abs(s(-10,i) - e)/e; %part a, determine y without identity
     y2(i) = abs((1/s(10, i)) - e_inv)/e_inv; %part b, determine y with identity
 end

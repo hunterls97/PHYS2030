@@ -16,6 +16,7 @@ a_dot_b = 0;
 for i=1:length(a) %iterate for every element in a to determine dot product for vectors in any dimension
   a_dot_b = a_dot_b + a(i)*b(i);
 end
+
 %% * Print dot product and state whether vectors are orthogonal
 if( a_dot_b == 0 && not(all(a == 0) || all(b == 0))) %check if the dot product is zero AND both input vectors are nonzero vectors
   disp('Vectors are orthogonal');

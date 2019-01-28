@@ -1,4 +1,8 @@
 %% pendul - Program to compute the motion of a simple pendulum
+%To run this program hit run or type pendul_214193627 in the console
+%Then choose which numerical method you wish to use
+%The last step is to choose an initial angle and a time step
+
 % using the Euler or Verlet method
 clear all;  help pendul      % Clear the memory and print header
 
@@ -91,7 +95,7 @@ title('Space Phase plot of pendulum with {\theta_0}=27^{\circ}')
 %the angle is 0. This is incorrect, however, using a more percise time step
 %of 0.01 fixes this precision issue.
 
-%v) At low initial angles such as theta = 10, the phase space plot is
+%v) At low initial angles such as theta = 10, the phase space plot is near
 %circular. At higher angles such as theta = 170, the upper and lower
 %sections of the phase space plot appears to form a more distored shape,
 %making a figure in a similar shape to an eye.

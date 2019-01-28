@@ -1,4 +1,7 @@
 %% orbit - Program to compute the orbit of a comet.
+%to run this program hit run or type orbit_214193627 in the console
+%next you need to enter the radial distance in au, the initial veloctiy,
+%the number of time steps, and the length of each timestep.
 clear all;  help orbit;  % Clear memory and print header
 
 %% * Set initial position and velocity of the comet.
@@ -68,7 +71,7 @@ polar(thplot,rplot);  % Use polar plot for graphing orbit
 hold on;
 quiver(0, 0, 2*r0*cosd(30), 2*r0*sind(30)); %plot a vector in the same direction as the external force
 xlabel('Distance (AU)');  grid;
-title('Skewed Orbit due to Third Body at 30^{\circ}');
+title('Elliptical Orbit due to Third Body at 30^{\circ}');
 legend('orbit', 'external force vector')
 pause(1)   % Pause for 1 second before drawing next plot
 
@@ -77,4 +80,5 @@ figure(2); clf;   % Clear figure 2 window and bring forward
 totalE = kinetic + potential;   % Total energy
 plot(tplot,kinetic,'-.',tplot,potential,'--',tplot,totalE,'-')
 legend('Kinetic','Potential','Total');
+title('Energy of system');
 xlabel('Time (yr)'); ylabel('Energy (M AU^2/yr^2)');
