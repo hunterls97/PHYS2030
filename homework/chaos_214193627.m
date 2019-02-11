@@ -1,10 +1,33 @@
 %% chaos_214193627.m - Program to plot chaotic voltage, current, and phase
-%to run this program, type chaos_214193627(state_vector, vc1_offset, timesteps)
+%Developed by Hunter Schofield - 214193627
+
+%To run this program, type chaos_214193627(state_vector, vc1_offset, timesteps)
 %where state_vector is the initial state vector, vc1_offset is the offset
 %voltage accross the first capacitor, and timesteps is the quantity of
 %timesteps to run the program for.
 %example: type chaos_214193627([(214193627/1e9), 0, -1], 0.1, 500) in the
 %command line
+
+%ii) as delta VC1 changes by factors of 10, the resultant space trajectory
+%and vc1(t) plots for the two starting positions slowly converge, however,
+%in order to see this convergance, we need to set the rk error tolerance
+%to be 1e-6 instead of 1e-3. This convergance
+%would make sense because as delta vc1 aproaches zero, then the two
+%starting points are equal, and should result in the same graph.
+%example: type chaos_214193627([(214193627/1e9), 0, -1], 0.01, 500) in the
+%command line to see how the results change for an offset a factor of 10
+%smaller.
+
+%iii) to make the resistor into a linear resistor, I selected the constant
+%value of m0 + m1 so that the linear resistor will be in the same order of
+%magnitude as the locally active nonlinear one. For this value of a linear
+%resistor, the circuit is a lot less chaotic. That is, the resultant plots
+%were a lot similar in this case, and converge much quicker as delta VC1
+%approaches 0. For the VC1(t) plot, the trend shows a damping sinusoidal
+%function with both plots overlapping. This makes sense because the locally active nonlinear
+%resistor was greatly dependent on the input paramenter vc1. By making it
+%constant, the ODE's that govern the circuit become simpler, and the system
+%becomes less chaotic.
 function chaos = chaos_214193627(s, offset, timesteps)
     %define circuit parameters
     C1 = 1/9;
@@ -21,7 +44,7 @@ function chaos = chaos_214193627(s, offset, timesteps)
     
     time = 0;
     tau = 1; %initial timestep guess
-    err = 1.e-3;   % Error tolerance
+    err = 1.e-3;   % Error tolerance, using 1e-6 instead of 1e-3 to show better convergance for small delta vc1
     for istep = 1:timesteps
        vc1_1 = s1(1); vc2_1 = s1(2); il_1 = s1(3); %state variables for position 1
        vc1_2 = s2(1); vc2_2 = s2(2); il_2 = s2(3); %state variables for position 2
@@ -30,19 +53,16 @@ function chaos = chaos_214193627(s, offset, timesteps)
        vc1_plot_1(istep) = vc1_1;  vc2_plot_1(istep) = vc2_1;  il_plot_1(istep) = il_1;
        vc1_plot_2(istep) = vc1_2;  vc2_plot_2(istep) = vc2_2;  il_plot_2(istep) = il_2;
        
-       %determine ir(vc1)
-       ir_1 = solve(vc1_1, Bp, m0, m1);
-       ir_2 = solve(vc1_2, Bp, m0, m1);
-       
        %setup parameters, all are constant except ir
-       param_1 = [G C1 C2 L ir_1];
-       param_2 = [G C1 C2 L ir_2];
+       param_1 = [G C1 C2 L m0 m1];
+       param_2 = [G C1 C2 L m0 m1];
        
        %* Find new state using adaptive Runge-Kutta
        [s1, time, tau] = rka(s1,time,tau,err,@chaosrk,param_1);
        [s2, time, tau] = rka(s2,time,tau,err,@chaosrk,param_2);
     end
     
+    %plot vc(t) 
     figure(1); clf; %start figure 1
     plot(tplot, vc1_plot_1, 'r-');
     hold on;
@@ -51,7 +71,9 @@ function chaos = chaos_214193627(s, offset, timesteps)
     title('Vc1 vs. Time');
     xlabel('time');
     ylabel('Vc1');
+    legend('initial point 1', 'initial point 2');
     
+    %plot phase space trajectories
     figure(2); clf; %start figure 2
     plot3(vc1_plot_1, vc2_plot_1, il_plot_1);
     hold on;
@@ -61,14 +83,5 @@ function chaos = chaos_214193627(s, offset, timesteps)
     xlabel('Voltage across capacitor 1');
     ylabel('Voltage across capacitor 2');
     zlabel('Current through inductor');
-    
-    function current = solve(vc, Bp, m0, m1)
-       if( vc <= -1*Bp)
-           current = (-1)*m1*Bp + m0*(vc + Bp);
-       elseif( abs(vc) <= Bp )
-           current = m1*vc;
-       else
-           current = m1*Bp + m0*(vc - Bp);
-       end 
-    return;
+    legend('initial point 1', 'initial point 2');
 return;
