@@ -20,8 +20,6 @@ function result = orbit2_214193627(rx, ry, vx, vy, tau, nStep)
     if(norm(r) + norm(v)*tau > norm(r))
         tau = -tau;
     end
-    
-    disp(v);
 
     %% * Set physical parameters (mass, G*M)
     GM = 4*pi^2;      % Grav. const. * Mass of Sun (au^3/yr^2)
