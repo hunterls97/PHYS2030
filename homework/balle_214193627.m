@@ -62,7 +62,7 @@ function t = trajectory(y1, speed, theta, airFlag, tau, method)
       t = (istep-1)*tau;     % Current time
       xNoAir(istep) = r1(1) + v1(1)*t;
       yNoAir(istep) = r1(2) + v1(2)*t - 0.5*grav*t^2;
-
+      
       %* Calculate the acceleration of the ball 
       accel = air_const*norm(v)*v;   % Air resistance
       accel(2) = accel(2)-grav;      % Gravity

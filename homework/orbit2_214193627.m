@@ -1,4 +1,4 @@
-function result = orbit2_214193627(rx, ry, vx, vy, tau, nStep)
+function result = orbit2_214193627(rx, ry, rz, vx, vy, vz, tau, nStep)
     %% orbit2_214193627 - Program to compute the periapsis point of an orbit.
     %By Hunter Schofield - 214193627 Version 2/11/2019
     %
@@ -13,8 +13,8 @@ function result = orbit2_214193627(rx, ry, vx, vy, tau, nStep)
     help orbit2_214193627;
 
     %% * Set initial position and velocity of the comet.
-    r = [rx ry];  v = [vx vy]; %set the initial states as required
-    state = [ r(1) r(2) v(1) v(2) ];   % Used by R-K routines
+    r = [rx ry rz];  v = [vx vy vz]; %set the initial states as required
+    state = [ r(1) r(2) v(1) v(2)];   % Used by R-K routines
     
     %if the magnitude of r increases after 1 time step, invert the timestep
     if(norm(r) + norm(v)*tau > norm(r))
@@ -26,9 +26,15 @@ function result = orbit2_214193627(rx, ry, vx, vy, tau, nStep)
     mass = 1.;        % Mass of comet 
     adaptErr = 1.e-3; % Error parameter used by adaptive Runge-Kutta
     time = 0;
+    plotX = [];
+    plotY = [];
+    plotZ = [];
     
     for iStep=1:nStep  
       %* Calculate new position and velocity using rk4 method.    
+      plotX(iStep) = r(1);
+      plotY(iStep) = r(2);
+      
       r_old = r; %set the old value of r
       state = rk4(state,time,tau,@gravrk,GM);
       r = [state(1) state(2)];   % 4th order Runge-Kutta
